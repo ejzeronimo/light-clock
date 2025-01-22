@@ -23,11 +23,11 @@
 /// @brief The blue color for the sky
 #define COLOR_SKY_BLUE   CRGB(37, 47, 108)
 /// @brief The purple color for the sky
-#define COLOR_SKY_PURPLE CRGB(34, 30, 62)
+#define COLOR_SKY_PURPLE CRGB(34, 30, 62) /* CRGB(17, 15, 31) */
 /// @brief The yellow color for the sun
-#define COLOR_SUN        CRGB(234, 232, 58)
+#define COLOR_SUN        CRGB(234, 232, 58) 
 /// @brief The white color for the moon
-#define COLOR_MOON       CRGB(120, 120, 120)
+#define COLOR_MOON       CRGB(120, 120, 120) /* CRGB(40, 40, 40) */
 
 /// @brief Status of the wifi connection
 int                status = WL_IDLE_STATUS;
@@ -97,7 +97,7 @@ void loop()
     Serial.println("======== Current State ========");
 
     // based off time in minutes, set state
-    if(currentTime.timeInMinutes >= 0 && currentTime.timeInMinutes < sunriseTime.start.timeInMinutes)
+    if((currentTime.timeInMinutes >= 0 && currentTime.timeInMinutes < sunriseTime.start.timeInMinutes) || currentTime.timeInMinutes >= endOfDay.timeInMinutes)
     {
         // lights off default case
         Serial.println("State: Lights off");
@@ -196,7 +196,7 @@ void loop()
     else if(currentTime.timeInMinutes >= sunsetTime.end.timeInMinutes && currentTime.timeInMinutes < endOfDay.timeInMinutes)
     {
         drawSphereBasedOffTime(sunsetTime.end, endOfDay, COLOR_MOON, 19);
-    }  
+    }
 
     renderStrip();
     printTime();
@@ -225,11 +225,15 @@ void drawSphereBasedOffTime(TimeInfo_t startTime, TimeInfo_t endTime, CRGB spher
     float_t  rawPositionValue = (float)(currentTime.timeInSeconds - startTime.timeInSeconds) / duration;
 
     int16_t middlePixelPos = ((1 - rawPositionValue) * (leds.length + sphereDiameter)) - (sphereDiameter / 2);
-    uint8_t startPixelPos  = middlePixelPos - (sphereDiameter / 2) + 3;
-    uint8_t endPixelPos    = middlePixelPos + (sphereDiameter / 2) - 3;
 
-    uint8_t startBufferPos = middlePixelPos - (sphereDiameter / 2);
-    uint8_t endBufferPos   = middlePixelPos + (sphereDiameter / 2);
+    int16_t tempA = middlePixelPos - (sphereDiameter / 2);
+    int16_t tempB = middlePixelPos + (sphereDiameter / 2);
+
+    uint8_t startPixelPos = (tempA + 3) >= 0 ? tempA + 3 : 0;
+    uint8_t endPixelPos   = (tempB - 3) >= 3 ? tempB - 3 : 0;
+
+    uint8_t startBufferPos = (tempA >= 0) ? tempA : 0;
+    uint8_t endBufferPos   = (tempB >= 0) ? tempB : 0;
 
     Serial.print("Sphere pos: ");
     Serial.println(middlePixelPos);

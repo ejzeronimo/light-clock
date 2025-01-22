@@ -24,8 +24,11 @@
 #define NTP_UDP_PORT         8888U
 /// @brief Root URL for the REST API
 #define REST_API_SERVER      "api.sunrise-sunset.org"
-/// @brief Endpoint URI for the REST API
-#define REST_API_ENDPOINT    "/json?lat=39.9914391&lng=-86.0546511&formatted=0"
+/*!
+    @brief Endpoint URI for the REST API
+    @remarks Build this per your location. Default is for Indianapolis, Indiana
+*/
+#define REST_API_ENDPOINT    "/json?lat=39.9914391&lng=-86.0546511&formatted=0&tzid=America/Indiana/Indianapolis"
 /// @brief Port for the REST API
 #define REST_API_PORT        80U
 
@@ -54,6 +57,9 @@ typedef struct TimeEvent_t
 const TimeInfo_t endOfDay = {
     .timeInSeconds = 86400,
     .timeInMinutes = 1440,
+    // nice mode for Eli, but he pissed me off so I am changing it
+    // .timeInSeconds = 82800,
+    // .timeInMinutes = 1380,
 };
 
 // NOTE: Global Definitions
@@ -65,7 +71,6 @@ void startNtpService(Client & httpClient);
 
 /// @brief Updates the sunrise/sunset times
 void updateNtpService(void);
-
 
 /// @brief Prints the time
 void printTime(void);

@@ -200,8 +200,5 @@ void getRiseSetTimes(void)
         int year, month, day, seconds, timezoneHour, timezoneMinute;
         sscanf(tempRise.c_str(), "%d-%d-%dT%lu:%lu:%d+%d:%d", &year, &month, &day, &sunriseHour, &sunriseMinute, &seconds, &timezoneHour, &timezoneMinute);
         sscanf(tempSet.c_str(), "%d-%d-%dT%lu:%lu:%d+%d:%d", &year, &month, &day, &sunsetHour, &sunsetMinute, &seconds, &timezoneHour, &timezoneMinute);
-
-        sunriseHour = sunriseHour + TIMEZONE_OFFSET;
-        sunsetHour  = sunsetHour + TIMEZONE_OFFSET;
     }
 }
